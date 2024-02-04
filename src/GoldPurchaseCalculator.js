@@ -84,7 +84,7 @@ const GoldPurchaseCalculator = () => {
 
             {/* <button onClick={calculateGoldQuantity}>Calculate</button> */}
             <br />
-            Result: {goldValue}
+            You can purchase: {goldValue} OZ of gold.
             <br />
             Remain Amount: {remainGoldAmount}
         </div>
