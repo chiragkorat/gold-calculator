@@ -1,75 +1,92 @@
 import React, { useEffect, useState } from 'react';
 
 const GoldPurchaseCalculator = () => {
-    const [investmentAmount, setInvestmentAmount] = useState(50000);
-    const [goldPrice, setGoldPricet] = useState(40000);
-    const [oneOZCommission, setOneOZCommission] = useState(0.065);
-    const [tenOZCommission, setTenOZCommission] = useState(0.225);
-    const [oneHundredthOZCommission, setOneHundredthOZCommission] = useState(0.30);
-    const [oneThousandthOZCommission, setOneThousandthOZCommission] = useState(0.35);
-    const [result, setResult] = useState('');
+    const [goldRate, setGoldRate] = useState(40000);
+    const [amount, setAmount] = useState(0);
+    const [com1, setCom1] = useState(0.065);
+    const [com01, setCom01] = useState(0.225);
+    const [com001, setCom001] = useState(0.3);
+    const [com0001, setCom0001] = useState(0.35);
+    const [com00001, setCom00001] = useState(0.20);
+    const [goldCount, setGoldCount] = useState(0);
+    const [goldValue, setgoldValue] = useState(0);
+    const [remainGoldAmount, setremainGoldAmount] = useState(0);
+
+
 
     const calculateGoldQuantity = () => {
+        let remainingAmount = amount;
 
-        // Calculate cost of 1 OZ gold
-        const costOfOneOZ = goldPrice + (goldPrice * oneOZCommission);
+        const calculateGold = (goldValue, commission, increment) => {
+            let goldCount = 0;
+            while (remainingAmount >= goldValue) {
+                goldCount += increment;
+                remainingAmount -= goldValue;
+            }
+            return goldCount;
+        };
 
-        // Calculate gold quantity for each type
-        const calculateGoldQuantity = (commissionRate) => investmentAmount / (goldPrice + goldPrice * commissionRate);
+        const goldCount1 = calculateGold(goldRate + goldRate * com1, com1, 1);
+        const goldCount01 = calculateGold((goldRate / 10) + ((goldRate / 10) * com01), com01, 0.1);
+        const goldCount001 = calculateGold((goldRate / 100) + ((goldRate / 100) * com001), com001, 0.01);
+        const goldCount0001 = calculateGold((goldRate / 1000) + ((goldRate / 1000) * com0001), com0001, 0.001);
+        const goldCount00001 = calculateGold((goldRate / 10000) + ((goldRate / 1000) * com00001), com00001, 0.001);
 
-        const goldQuantityOneOZ = calculateGoldQuantity(oneOZCommission);
-        const goldQuantityTenOZ = calculateGoldQuantity(tenOZCommission);
-        const goldQuantityOneHundredthOZ = calculateGoldQuantity(oneHundredthOZCommission);
-        const goldQuantityOneThousandthOZ = calculateGoldQuantity(oneThousandthOZCommission);
+        setGoldCount(goldCount1 + goldCount01 + goldCount001 + goldCount0001 + goldCount00001);
 
-        // Find the maximum quantity
-        const maxGoldQuantity = Math.max(goldQuantityOneOZ, goldQuantityTenOZ, goldQuantityOneHundredthOZ, goldQuantityOneThousandthOZ);
-
-        // Display the result
-        setResult(`You can purchase ${maxGoldQuantity.toFixed(5)} OZ of gold.`);
+        console.log(`Total gold: ${goldCount}`);
+        console.log(`Pending amount: ${remainingAmount}`);
+        setgoldValue(goldCount)
+        setremainGoldAmount(remainingAmount)
     };
 
     useEffect(() => {
         calculateGoldQuantity()
-    }, [investmentAmount, oneOZCommission, tenOZCommission, oneHundredthOZCommission, oneThousandthOZCommission, goldPrice])
+    }, [goldRate, amount, com1, com01, com001, com0001, goldCount])
 
     return (
         <div className="gold-purchase-calculator">
-
             <h2>Gold Purchase Calculator</h2>
-            <label htmlFor="investmentAmount">1 OZ Gold Price: </label>
-            <input type="number" id="investmentAmount" disabled value={goldPrice} onChange={(e) => setGoldPricet(e.target.value)} />
+
+            <label htmlFor="goldRate">Enter Gold Rate (in rupees): </label>
+            <input type="number" id="goldRate" value={goldRate} onChange={(e) => setGoldRate(e.target.value)} />
 
             <br />
 
-            <label htmlFor="oneOZCommission">Enter Commission for 1 OZ: </label>
-            <input type="number" id="oneOZCommission" step="0.001" value={oneOZCommission} onChange={(e) => setOneOZCommission(e.target.value)} />
+            <label htmlFor="amount">Enter Investment Amount (in rupees): </label>
+            <input type="number" id="amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
 
             <br />
 
-            <label htmlFor="tenOZCommission">Enter Commission for 10 OZ: </label>
-            <input type="number" id="tenOZCommission" step="0.001" value={tenOZCommission} onChange={(e) => setTenOZCommission(e.target.value)} />
+            <label htmlFor="com1">Enter Commission for 1 OZ: </label>
+            <input type="number" id="com1" step="0.001" value={com1} onChange={(e) => setCom1(e.target.value)} />
 
             <br />
 
-            <label htmlFor="oneHundredthOZCommission">Enter Commission for 1/100 OZ: </label>
-            <input type="number" id="oneHundredthOZCommission" step="0.001" value={oneHundredthOZCommission} onChange={(e) => setOneHundredthOZCommission(e.target.value)} />
+            <label htmlFor="com01">Enter Commission for 1/10 OZ: </label>
+            <input type="number" id="com01" step="0.001" value={com01} onChange={(e) => setCom01(e.target.value)} />
 
             <br />
 
-            <label htmlFor="oneThousandthOZCommission">Enter Commission for 1/1000 OZ: </label>
-            <input type="number" id="oneThousandthOZCommission" step="0.001" value={oneThousandthOZCommission} onChange={(e) => setOneThousandthOZCommission(e.target.value)} />
+            <label htmlFor="com001">Enter Commission for 1/100 OZ: </label>
+            <input type="number" id="com001" step="0.001" value={com001} onChange={(e) => setCom001(e.target.value)} />
 
             <br />
+
+            <label htmlFor="com0001">Enter Commission for 1/1000 OZ: </label>
+            <input type="number" id="com0001" step="0.001" value={com0001} onChange={(e) => setCom0001(e.target.value)} />
+
             <br />
-            <label htmlFor="oneThousandthOZCommission">User will enter Price to purchase Gold </label>
+            <label htmlFor="com00001">Enter Commission for 1/10000 OZ: </label>
+            <input type="number" id="com00001" step="0.001" value={com00001} onChange={(e) => setCom00001(e.target.value)} />
 
-            <input type="number" id="investmentAmount" value={investmentAmount} onChange={(e) => setInvestmentAmount(e.target.value)} />
-
+            <br />
 
             {/* <button onClick={calculateGoldQuantity}>Calculate</button> */}
-
-            <p id="result">{result}</p>
+            <br />
+            Result: {goldValue}
+            <br />
+            Remain Amount: {remainGoldAmount}
         </div>
     );
 };
